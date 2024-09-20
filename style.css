@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: grid;
+    place-items: center;
+    background-color:rgba(0, 0, 0, 0.527) ;
+    height: 100vh;
+}
+
+.container {
+    width: 400px;
+    aspect-ratio: 1;
+    background: #776e65;
+    border:5px solid #bbb6b0;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(4,1fr);
+    gap: 5px;
+    padding: 7px;
+}
+
+
+
+.box {
+ 
+    background-color: #bbb6b0;
+    font-size: 3rem;
+    font-weight: 700; 
+    font-family: sans-serif;
+    border-radius: 5px;
+    color: rgb(124, 124, 124);
+    display: grid;
+    place-items: center;
+    
+}
+
+.bg-eee4da {
+    background-color: #eee4da;
+}
+
+.bg-ede0c8 {
+    background-color: #ede0c8;
+}
+
+
+.box[data-value="2"] { background-color: #eee4da; }
+.box[data-value="4"] { background-color: #ede0c8; }
+.box[data-value="8"] { background-color: #f2b179; }
+.box[data-value="16"] { background-color: #f59563; }
+.box[data-value="32"] { background-color: #f67c5f; }
+.box[data-value="64"] { background-color: #f65e3b; }
+.box[data-value="128"] { background-color: #edcf72; }
+.box[data-value="256"] { background-color: #edcc61; }
+.box[data-value="512"] { background-color: #edc850; }
+.box[data-value="1024"] { background-color: #edc53f; }
+.box[data-value="2048"] { background-color: #edc22e; }
+
