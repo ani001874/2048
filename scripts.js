@@ -1,80 +1,87 @@
 const container = document.querySelector(".container");
 let gameRow = 4;
 let matrix = [];
+let score = 0;
+document.querySelector(".score-val").innerHTML = score;
 
 const createGameBoard = () => {
   for (let i = 0; i < gameRow * gameRow; i++) {
     let gameDiv = document.createElement("div");
-    gameDiv.innerHTML = 0;
+    gameDiv.innerHTML = null;
     gameDiv.classList.add("box");
     container.appendChild(gameDiv);
     matrix.push(gameDiv);
   }
-
   randomText();
   randomText();
 };
 
 const setColor = () => {
-  for (let i = 0;i<16; i ++){
-    if(matrix[i].innerHTML  == 2){
+  for (let i = 0; i < 16; i++) {
+    if (matrix[i].innerHTML == 2) {
       matrix[i].style.backgroundColor = "#eee4da";
-    }else if(matrix[i].innerHTML == 4) {
+    } else if (matrix[i].innerHTML == 4) {
       matrix[i].style.backgroundColor = "#ede0c8";
-
-    }
-    else if(matrix[i].innerHTML == 8) {
+    } else if (matrix[i].innerHTML == 8) {
       matrix[i].style.backgroundColor = "#f2b179";
-
-    }
-    else if(matrix[i].innerHTML == 16) {
+    } else if (matrix[i].innerHTML == 16) {
       matrix[i].style.backgroundColor = "#f59563";
-
-    }
-    else if(matrix[i].innerHTML == 32) {
+    } else if (matrix[i].innerHTML == 32) {
       matrix[i].style.backgroundColor = "#f67c5f";
-
-    }
-    else if(matrix[i].innerHTML == 64) {
+    } else if (matrix[i].innerHTML == 64) {
       matrix[i].style.backgroundColor = "#f65e3b";
-
-    }
-    else if(matrix[i].innerHTML == 128) {
+    } else if (matrix[i].innerHTML == 128) {
       matrix[i].style.backgroundColor = "#edcf72";
-
-    }
-    else if(matrix[i].innerHTML == 256) {
+    } else if (matrix[i].innerHTML == 256) {
       matrix[i].style.backgroundColor = "#edcc61";
-
-    }
-    else if(matrix[i].innerHTML == 512) {
-      matrix[i].style.backgroundColor = "#edc850"
-
-    }
-    else if(matrix[i].innerHTML == 1024) {
-      matrix[i].style.backgroundColor = "#edc53f"
-
-    }
-    else if(matrix[i].innerHTML == 2048) {
-      matrix[i].style.backgroundColor = "#edc22e"
-
+    } else if (matrix[i].innerHTML == 512) {
+      matrix[i].style.backgroundColor = "#edc850";
+    } else if (matrix[i].innerHTML == 1024) {
+      matrix[i].style.backgroundColor = "#edc53f";
+    } else if (matrix[i].innerHTML == 2048) {
+      matrix[i].style.backgroundColor = "#edc22e";
     } else {
-      matrix[i].style.backgroundColor = "#bbb6b0"
+      matrix[i].style.backgroundColor = "#bbb6b0";
     }
-
-
   }
-}
+};
+
+setInterval(setColor,30)
+
+const isFull = () => matrix.every( ele => ele.innerHTML != "");
+
+const gameOver = () => {
+  if (isFull()) {
+    for (let i = 0; i < 15; i++) {
+      if ( i % 4 !==  3 && matrix[i].innerHTML == matrix[i + 1].innerHTML ) return false;
+      else if ( i < 12 && matrix[i].innerHTML == matrix[i+4].innerHTML ) return false      
+    }
+    return true;
+  }
+
+  return false;
+};
 
 const generateRandomNum = () => Math.floor(Math.random() * matrix.length);
 const randomText = () => {
   let randomNum = generateRandomNum();
-  if (matrix[randomNum].innerHTML == 0) {
-    let value = Math.random () < 0.9 ? 2 : 4;
+  if ( matrix[randomNum].innerHTML === "") {
+    let value = Math.random() < 0.9 ? 2 : 4;
     matrix[randomNum].innerHTML = value;
-    setColor()
+   
+    // console.log(gameOver())
+    if (gameOver()) {
+      let gameOverDiv = document.createElement('div')
+      gameOverDiv.classList.add('gameOver');
+      let gameOverMsg = `<p> Game Over </p>`
+      gameOverDiv.insertAdjacentHTML("afterbegin",  gameOverMsg)
+      document.body.appendChild(gameOverDiv)
+    }
   } else {
-    randomText();
+    if(!isFull()) {
+      randomText()
+    }
+
   }
 };
 
@@ -82,15 +89,11 @@ createGameBoard();
 
 const moveX = (dir) => {
   for (let i = 0; i < 16; i++) {
-    
-   
     if (i % 4 === 0) {
       let firstItem = matrix[i];
       let secondItem = matrix[i + 1];
       let thirdItem = matrix[i + 2];
       let fourItem = matrix[i + 3];
-
-      
 
       let row = [
         parseInt(firstItem.innerHTML),
@@ -101,14 +104,15 @@ const moveX = (dir) => {
 
       let filteredRow = row.filter((item) => item);
       let len = filteredRow.length;
+
       let newRow = [];
       if (dir === "right") {
         newRow = Array(4 - len)
-          .fill(0)
+          .fill(null)
           .concat(filteredRow);
       }
       if (dir === "left") {
-        newRow = [...filteredRow, ...Array(4 - len).fill(0)];
+        newRow = [...filteredRow, ...Array(4 - len).fill(null)];
       }
 
       matrix[i].innerHTML = newRow[0];
@@ -119,22 +123,66 @@ const moveX = (dir) => {
   }
 };
 
+const moveY = (dir) => {
+  for (let i = 0; i < 4; i++) {
+    let firstItem = matrix[i];
+    let secondItem = matrix[i + 4];
+    let thirdItem = matrix[i + 8];
+    let fourItem = matrix[i + 12];
 
-const moveY  = (dir) => {
-  
-}
+    let col = [
+      parseInt(firstItem.innerHTML),
+      parseInt(secondItem.innerHTML),
+      parseInt(thirdItem.innerHTML),
+      parseInt(fourItem.innerHTML),
+    ];
+
+    let filteredCol = col.filter((num) => num);
+    let len = filteredCol.length;
+    let newCol = [];
+    if (dir === "down") {
+      newCol = Array(4 - len)
+        .fill(null)
+        .concat(filteredCol);
+    }
+
+    if (dir === "up") {
+      newCol = [...filteredCol, ...Array(4 - len).fill(null)];
+    }
+
+    firstItem.innerHTML = newCol[0];
+    secondItem.innerHTML = newCol[1];
+    thirdItem.innerHTML = newCol[2];
+    fourItem.innerHTML = newCol[3];
+  }
+};
+
 
 
 const combineRow = (dir) => {
   for (let i = 0; i < 15; i++) {
     if (
-      matrix[i].innerHTML !== 0 &&
+      matrix[i].innerHTML &&
       matrix[i].innerHTML === matrix[i + 1].innerHTML
     ) {
-      if (dir === "right")
-        matrix[i + 1].innerHTML = parseInt(matrix[i].innerHTML) * 2;
-      if (dir === "left")
-        matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
+      matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
+      score += parseInt(matrix[i].innerHTML);
+      document.querySelector(".score-val").innerHTML = score;
+      matrix[i + 1].innerHTML = null;
+    }
+  }
+};
+
+const combineCol = (dir) => {
+  for (let i = 0; i < 12; i++) {
+    if (
+      matrix[i].innerHTML &&
+      matrix[i].innerHTML === matrix[i + 4].innerHTML
+    ) {
+      matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
+      score += parseInt(matrix[i].innerHTML);
+      document.querySelector(".score-val").innerHTML = score;
+      matrix[i + 4].innerHTML = null;
     }
   }
 };
@@ -153,12 +201,28 @@ document.addEventListener("keydown", (e) => {
     combineRow("right");
     moveX("right");
     randomText();
+   
+    
+    
   }
 
   if (e.key === "ArrowLeft") {
     moveX("left");
     combineRow("left");
     moveX("left");
+    randomText();
+  }
+
+  if (e.key === "ArrowUp") {
+    moveY("up");
+    combineCol("up");
+    moveY("up")
+    randomText();
+  }
+  if (e.key === "ArrowDown") {
+    moveY("down");
+    combineCol("down");
+    moveY("down")
     randomText();
   }
 });
