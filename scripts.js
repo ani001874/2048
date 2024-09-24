@@ -2,7 +2,16 @@ const container = document.querySelector(".container");
 let gameRow = 4;
 let matrix = [];
 let score = 0;
-document.querySelector(".score-val").innerHTML = score;
+document.querySelector(".score .score-val").innerHTML = score;
+
+const scoreSetInLocal = (score) => {
+  localStorage.setItem("score", JSON.stringify(score));
+};
+
+const getScoreFromLocal = () => JSON.parse(localStorage.getItem("score"))  || 0;
+document.querySelector(".best-score .score-val").innerHTML = getScoreFromLocal();
+
+
 
 const createGameBoard = () => {
   for (let i = 0; i < gameRow * gameRow; i++) {
@@ -46,15 +55,17 @@ const setColor = () => {
   }
 };
 
-setInterval(setColor,30)
+setInterval(setColor, 30);
 
-const isFull = () => matrix.every( ele => ele.innerHTML != "");
+const isFull = () => matrix.every((ele) => ele.innerHTML != "");
 
 const gameOver = () => {
   if (isFull()) {
     for (let i = 0; i < 15; i++) {
-      if ( i % 4 !==  3 && matrix[i].innerHTML == matrix[i + 1].innerHTML ) return false;
-      else if ( i < 12 && matrix[i].innerHTML == matrix[i+4].innerHTML ) return false      
+      if (i % 4 !== 3 && matrix[i].innerHTML == matrix[i + 1].innerHTML)
+        return false;
+      else if (i < 12 && matrix[i].innerHTML == matrix[i + 4].innerHTML)
+        return false;
     }
     return true;
   }
@@ -65,23 +76,22 @@ const gameOver = () => {
 const generateRandomNum = () => Math.floor(Math.random() * matrix.length);
 const randomText = () => {
   let randomNum = generateRandomNum();
-  if ( matrix[randomNum].innerHTML === "") {
+  if (matrix[randomNum].innerHTML === "") {
     let value = Math.random() < 0.9 ? 2 : 4;
     matrix[randomNum].innerHTML = value;
-   
+
     // console.log(gameOver())
     if (gameOver()) {
-      let gameOverDiv = document.createElement('div')
-      gameOverDiv.classList.add('gameOver');
-      let gameOverMsg = `<p> Game Over </p>`
-      gameOverDiv.insertAdjacentHTML("afterbegin",  gameOverMsg)
-      document.body.appendChild(gameOverDiv)
+      let gameOverDiv = document.createElement("div");
+      gameOverDiv.classList.add("gameOver");
+      let gameOverMsg = `<p> Game Over </p>`;
+      gameOverDiv.insertAdjacentHTML("afterbegin", gameOverMsg);
+      document.body.appendChild(gameOverDiv);
     }
   } else {
-    if(!isFull()) {
-      randomText()
+    if (!isFull()) {
+      randomText();
     }
-
   }
 };
 
@@ -157,8 +167,6 @@ const moveY = (dir) => {
   }
 };
 
-
-
 const combineRow = (dir) => {
   for (let i = 0; i < 15; i++) {
     if (
@@ -167,7 +175,13 @@ const combineRow = (dir) => {
     ) {
       matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
       score += parseInt(matrix[i].innerHTML);
+      if (parseInt(getScoreFromLocal()) <= score) {
+        scoreSetInLocal(score);
+      }
       document.querySelector(".score-val").innerHTML = score;
+      console.log(getScoreFromLocal())
+      document.querySelector(".best-score .score-val").innerHTML =
+  getScoreFromLocal() ;
       matrix[i + 1].innerHTML = null;
     }
   }
@@ -181,7 +195,11 @@ const combineCol = (dir) => {
     ) {
       matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
       score += parseInt(matrix[i].innerHTML);
+      if (parseInt(getScoreFromLocal()) <= score) {
+        scoreSetInLocal(score);
+      }
       document.querySelector(".score-val").innerHTML = score;
+      document.querySelector(".best-score .score-val").innerHTML = getScoreFromLocal();
       matrix[i + 4].innerHTML = null;
     }
   }
@@ -201,9 +219,6 @@ document.addEventListener("keydown", (e) => {
     combineRow("right");
     moveX("right");
     randomText();
-   
-    
-    
   }
 
   if (e.key === "ArrowLeft") {
@@ -216,13 +231,39 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowUp") {
     moveY("up");
     combineCol("up");
-    moveY("up")
+    moveY("up");
     randomText();
   }
   if (e.key === "ArrowDown") {
     moveY("down");
     combineCol("down");
-    moveY("down")
+    moveY("down");
     randomText();
   }
 });
+
+const gameReset  = () => {
+  for  (let i = 0; i < 16; i++) {
+    matrix[i].innerHTML = null;
+  }
+  
+  score  = 0;
+  document.querySelector(".score .score-val").innerHTML = score;
+  
+
+  let randomNum  = Math.floor(Math.random() * 16);
+  let randomNum2  = Math.floor(Math.random() * 16);
+  if (randomNum !== randomNum2) {
+    let value = Math.random() < 0.9 ? 2 : 4;
+    matrix[randomNum].innerHTML = value;
+    matrix[randomNum2].innerHTML = value;
+  } else {
+    gameReset()
+  }
+
+
+}
+
+document.querySelector('.reset-button').addEventListener('click',gameReset)
+
+

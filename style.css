@@ -62,13 +62,34 @@ body {
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   
     }
  }
+ .best-score {
+    width: 100px;
+    height: 70px;
+    background-color:  #bbada0;
+    display: grid;
+    place-items: center;
+    padding: 5px;
+    margin-top: 35px;
+
+    p:first-child {
+        color: #fff;
+        font-size: 1.2rem;
+        font-family: fantasy;
+    }
+
+    p {
+        font-size: 1.8rem;
+        color: #fff;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   
+    }
+ }
 
 
  .gameOver {
     position: absolute;
     width: 400px;
     aspect-ratio: 1;
-    top: 43%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%,-50%);
     background-color: #bbb6b081;
@@ -82,6 +103,25 @@ body {
         font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     }
 
+ }
+
+
+ .game-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+ }
+
+ .reset-button {
+    background-color:#998479;
+    padding: 10px 20px;
+    color: white;
+    outline: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+   
  }
 
 
