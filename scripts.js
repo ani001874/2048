@@ -129,13 +129,21 @@ const moveX = (dir) => {
         newRow = [...filteredRow, ...Array(4 - len).fill(null)];
       }
 
+    
       matrix[i].innerHTML = newRow[0];
       matrix[i + 1].innerHTML = newRow[1];
       matrix[i + 2].innerHTML = newRow[2];
       matrix[i + 3].innerHTML = newRow[3];
+    
+
+      
     }
   }
 };
+
+
+
+
 
 const moveY = (dir) => {
   for (let i = 0; i < 4; i++) {
@@ -171,40 +179,41 @@ const moveY = (dir) => {
   }
 };
 
-const combineRow = (dir) => {
+const combineRow = () => {
   for (let i = 0; i < 15; i++) {
     if (
       matrix[i].innerHTML &&
       matrix[i].innerHTML === matrix[i + 1].innerHTML
     ) {
       matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
+      matrix[i + 1].innerHTML = null;
       score += parseInt(matrix[i].innerHTML);
       if (parseInt(getScoreFromLocal()) <= score) {
         scoreSetInLocal(score);
       }
       document.querySelector(".score-val").innerHTML = score;
-      console.log(getScoreFromLocal())
       document.querySelector(".best-score .score-val").innerHTML =
   getScoreFromLocal() ;
-      matrix[i + 1].innerHTML = null;
+      
     }
   }
 };
 
-const combineCol = (dir) => {
+const combineCol = () => {
   for (let i = 0; i < 12; i++) {
     if (
       matrix[i].innerHTML &&
       matrix[i].innerHTML === matrix[i + 4].innerHTML
     ) {
       matrix[i].innerHTML = parseInt(matrix[i].innerHTML) * 2;
+      matrix[i + 4].innerHTML = null;
       score += parseInt(matrix[i].innerHTML);
       if (parseInt(getScoreFromLocal()) <= score) {
         scoreSetInLocal(score);
       }
       document.querySelector(".score-val").innerHTML = score;
       document.querySelector(".best-score .score-val").innerHTML = getScoreFromLocal();
-      matrix[i + 4].innerHTML = null;
+     
     }
   }
 };
@@ -220,27 +229,27 @@ document.addEventListener("keydown", (e) => {
 
   if (e.key === "ArrowRight") {
     moveX("right");
-    combineRow("right");
+    combineRow();
     moveX("right");
     randomText();
   }
 
   if (e.key === "ArrowLeft") {
     moveX("left");
-    combineRow("left");
+    combineRow();
     moveX("left");
     randomText();
   }
 
   if (e.key === "ArrowUp") {
     moveY("up");
-    combineCol("up");
+    combineCol();
     moveY("up");
     randomText();
   }
   if (e.key === "ArrowDown") {
     moveY("down");
-    combineCol("down");
+    combineCol();
     moveY("down");
     randomText();
   }
@@ -250,11 +259,17 @@ const gameReset  = () => {
   for  (let i = 0; i < 16; i++) {
     matrix[i].innerHTML = null;
   }
+
+  if(gameOver()) {
+    let gameOverDiv  = document.querySelector(".gameOver");
+    gameOverDiv.remove()
+
+  }
   
   score  = 0;
   document.querySelector(".score .score-val").innerHTML = score;
   
-
+  
   let randomNum  = Math.floor(Math.random() * 16);
   let randomNum2  = Math.floor(Math.random() * 16);
   if (randomNum !== randomNum2) {
@@ -273,13 +288,13 @@ document.querySelector('.reset-button').addEventListener('click',gameReset)
 container.addEventListener("touchstart",(e) => {
    startX  = e.changedTouches[0].screenX;
    startY  = e.changedTouches[0].screenY;
-})
+}, { passive: true })
 
 container.addEventListener("touchend",(e) => {
    endX  = e.changedTouches[0].screenX;
    endY  = e.changedTouches[0].screenY;
    handleSwipe()
-})
+}, { passive: true })
 
 const handleSwipe = () => {
   let swipeDistanceX = endX - startX
@@ -289,30 +304,29 @@ const handleSwipe = () => {
   if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) ) {
     if (swipeDistanceX > threshold) {
     moveX("right");
-    combineRow("right");
+    combineRow();
     moveX("right");
     randomText();
   }else if (swipeDistanceX < -threshold) {
     moveX("left");
-    combineRow("left");
+    combineRow();
     moveX("left");
     randomText();
   }
   } else {
   if (swipeDistanceY > threshold) {
     moveY("down");
-    combineCol("down");
+    combineCol();
     moveY("down");
     randomText();
   }else if (swipeDistanceY < -threshold) {
     moveY("up");
-    combineCol("up");
+    combineCol();
     moveY("up");
     randomText();
   }
   }
-  
-  
+
 }
 
 

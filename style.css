@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 body {
@@ -16,7 +17,7 @@ body {
 .container {
     width: 400px;
     aspect-ratio: 1;
-    background: #776e65;
+    background: #a5a29f;
     border:5px solid #bbb6b0;
     border-radius: 10px;
     display: grid;
@@ -38,8 +39,10 @@ body {
     color: rgb(124, 124, 124);
     display: grid;
     place-items: center;
+    transition: all  30ms  ease-in-out;
     
 }
+
 
  .score {
     width: 100px;
@@ -129,7 +132,20 @@ body {
    .container {
      width: 350px;
      aspect-ratio: 1;
+    
+   }
+   .box {
+    font-size: 2.3rem;
+    color: white;
+   }
+
+   body {
+    background-color: #e0ddd9;
+    
    }
  }
+
+
+
 
 
