@@ -2,6 +2,10 @@ const container = document.querySelector(".container");
 let gameRow = 4;
 let matrix = [];
 let score = 0;
+let startX = 0 
+let endX = 0
+let startY = 0
+let endY = 0
 document.querySelector(".score .score-val").innerHTML = score;
 
 const scoreSetInLocal = (score) => {
@@ -265,5 +269,50 @@ const gameReset  = () => {
 }
 
 document.querySelector('.reset-button').addEventListener('click',gameReset)
+
+container.addEventListener("touchstart",(e) => {
+   startX  = e.changedTouches[0].screenX;
+   startY  = e.changedTouches[0].screenY;
+})
+
+container.addEventListener("touchend",(e) => {
+   endX  = e.changedTouches[0].screenX;
+   endY  = e.changedTouches[0].screenY;
+   handleSwipe()
+})
+
+const handleSwipe = () => {
+  let swipeDistanceX = endX - startX
+  let swipeDistanceY = endY - startY
+  let threshold = 30
+  
+  if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) ) {
+    if (swipeDistanceX > threshold) {
+    moveX("right");
+    combineRow("right");
+    moveX("right");
+    randomText();
+  }else if (swipeDistanceX < -threshold) {
+    moveX("left");
+    combineRow("left");
+    moveX("left");
+    randomText();
+  }
+  } else {
+  if (swipeDistanceY > threshold) {
+    moveY("down");
+    combineCol("down");
+    moveY("down");
+    randomText();
+  }else if (swipeDistanceY < -threshold) {
+    moveY("up");
+    combineCol("up");
+    moveY("up");
+    randomText();
+  }
+  }
+  
+  
+}
 
 

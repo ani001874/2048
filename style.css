@@ -123,5 +123,13 @@ body {
     cursor: pointer;
    
  }
+ 
+ 
+ @media only screen and (width <= 400px) {
+   .container {
+     width: 350px;
+     aspect-ratio: 1;
+   }
+ }
 
 
