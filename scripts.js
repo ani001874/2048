@@ -259,11 +259,9 @@ const gameReset  = () => {
   for  (let i = 0; i < 16; i++) {
     matrix[i].innerHTML = null;
   }
-
-  if(gameOver()) {
-    let gameOverDiv  = document.querySelector(".gameOver");
+  let gameOverDiv  = document.querySelector(".gameOver");
+  if(gameOverDiv) {
     gameOverDiv.remove()
-
   }
   
   score  = 0;
